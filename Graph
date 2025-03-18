@@ -1,0 +1,55 @@
+//cycle detection using bfs
+#include<queue>
+
+bool bfs(vector<bool>& visited,vector<int>& parent,vector<vector<int>>& adj,int i)
+{
+            queue<int> q;
+            q.push(i);
+            visited[i]=true;
+            parent[i]=-1;
+
+            while(!q.empty()){
+                int front=q.front();
+                q.pop();
+
+                for(int j:adj[front]){
+                    if(!visited[j])
+                    {
+                        q.push(j);
+                        visited[j]=true;
+                        parent[j]=front;
+                    }
+                    else if(parent[front]!=j)
+                        return true;
+                    }
+                }
+
+    return false;
+}
+string cycleDetection (vector<vector<int>>& edges, int n, int m)
+{
+    //adjacency list 
+    vector<vector<int>> adj(n+1);
+
+    for(int i=0;i<m;i++){
+        int u=edges[i][0];
+        int v=edges[i][1];
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    //check for cycle
+    vector<bool> visited(n+1,false);//visited vector
+    vector<int> parent(n+1,-1);
+
+ for(int i=1;i<=n;i++)
+    {
+    if(!visited[i]){
+    if(bfs(visited,parent,adj,i))
+      return "Yes";
+    }
+    }
+
+    return "No";
+}
