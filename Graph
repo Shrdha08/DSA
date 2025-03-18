@@ -49,6 +49,51 @@ string cycleDetection (vector<vector<int>>& edges, int n, int m)
     if(bfs(visited,parent,adj,i))
       return "Yes";
     }
+
+//using dfs
+bool dfs(vector<bool>& visited,vector<vector<int>>& adj,int i,int par){
+    visited[i]=true;
+
+    for(int j:adj[i]){
+        if(!visited[j]){
+        bool cycleDetected= dfs(visited,adj,j,i);
+        if(cycleDetected) return true;
+        }
+        else if(par!=j)
+        return true;
+    }
+
+    return false;
+}
+string cycleDetection (vector<vector<int>>& edges, int n, int m)
+{
+
+     //adjacency list 
+    vector<vector<int>> adj(n+1);
+
+    for(int i=0;i<m;i++){
+        int u=edges[i][0];
+        int v=edges[i][1];
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    //check for cycle
+    vector<bool> visited(n+1,false);//visited vector
+    vector<int> parent(n+1,-1);
+
+ for(int i=1;i<=n;i++)
+    {
+    if(!visited[i]){
+    if(dfs(visited,adj,i,-1))
+      return "Yes";
+    }
+    }
+
+    return "No";
+}
+
     }
 
     return "No";
